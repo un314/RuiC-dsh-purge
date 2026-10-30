@@ -4,6 +4,9 @@
       config:
         enabled: true
         autoApplyOnStart: false
+        # Reinforce workspace instructions in memory; needed on sealed (signed
+        # ASAR) installations where the package files cannot be patched.
+        runtimeOverride: true
         # base: /absolute/path/to/node_modules/@deepseek-ai
         # home: /absolute/path/to/.dsh
         # shimDir: /absolute/path/to/windows/npm

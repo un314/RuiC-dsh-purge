@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0 — 2026-10-30
+
+签名/只读安装的运行时覆盖（实测 DSH Desktop **0.2.1-rc.3**，`writable: false`、`state: "sealed"`）。
+
+- 新增 `lib/runtime.js`：在 `agent/pre-step` 的下游返回处，给 `source.kind === "agent-instructions"` 的消息加一段「本次会话强制生效」声明。全程内存改写，宿主文件与签名包零改动。
+- 改写幂等：已加固的消息不会重复加前缀；非指令消息、非文本块原样返回。
+- `status` 新增 `runtime` 字段（`enabled / rewrites / lastAt / promptPath / note`）。
+- `cordis.patch.yml` 默认 `runtimeOverride: true`；设 `false` 可关闭。
+- 主机未暴露 `ctx.on` 时自动跳过并报告原因，不抛错。
+- 新增 `test/runtime.test.mjs` 六例；`npm test` 38 通过，`npm run check` 通过。
+
 ## 1.0.2 — 2026-10-23
 
 第三方 Electron 外壳兼容（实测 DSH 0.2.1-rc.2 的 DeepSeek Bot 外壳，运行时打包在 `app.asar` 根 `node_modules/@deepseek-ai`）。

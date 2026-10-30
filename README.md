@@ -187,12 +187,21 @@ Windows 旧版 npm 布局要显式传 `--shim-dir <npm-prefix>`，`dsh.cmd` 和 
 
 | 场景 | 支持范围 |
 | --- | --- |
-| 桌面签名 `app.asar` | 自动发现、只读预检、独立提示词、插件命令与工具、权限默认值观察 |
+| 桌面签名 `app.asar` | 自动发现、只读预检、独立提示词、**运行时指令加固**、插件命令与工具、权限默认值观察 |
 | 第三方 Electron 外壳 | 运行时打包在归档根 `node_modules/@deepseek-ai` 时同样只读预检；Electron 的 asar 路径拦截与 macOS 兜底路径已处理 |
 | 0.2.1 解包目录 | 精确匹配新版 4 个提示词目标、快照应用、冲突检测回滚 |
 | 旧版 npm 布局 | 保留上游 8 条补丁；所有目标精确匹配后才写入 |
 | 新版会话权限 | 用 DSH 原生 `/permission`；不把文件标记当成当前会话权限 |
 | 未知版本 | 报告实际版本和匹配结果，不凭版本号宣称兼容 |
+
+### 签名/只读安装：运行时覆盖
+
+桌面版把宿主代码封在签名的 `app.asar` 里，文件补丁写不进去（`status` 返回 `writable: false`、`state: "sealed"`）。这种情况下改为内存改写，**一个字节都不落盘**：
+
+- 在 `agent/pre-step` 的下游返回处，给 `source.kind === "agent-instructions"` 的消息加上一段强制声明（`lib/runtime.js`）。
+- 幂等：已加固的消息不会重复加前缀；`status.runtime` 报告 `enabled / rewrites / lastAt`。
+- 关闭方式：`cordis.patch.yml` 里设 `runtimeOverride: false`。
+- 作用边界：这是让模型把 `AGENTS.md` 当**本次会话的硬约束**，不是改写宿主文件里的原文字节。宿主原文（“仅供参考”）仍在，只是运行时声明压过它的语气。
 
 ### 怎么自己复核
 
