@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0 — 2026-10-30
+
+跨软件通用入口。插件挂钩子只能跑在 DSH 里，同能力改为按宿主能力分发：
+
+- 新增 `lib/mcp.js`：纯 stdio JSON-RPC 的 MCP 服务器，零依赖、无 SDK，暴露 `ruic_status` / `ruic_plan` / `ruic_apply`。
+- 新增 `SKILL.md`：支持技能目录的客户端直接可用，内含「只读宿主禁止调 apply」的硬规则与判断顺序。
+- README 增加「在任何 AI 软件里用」一节，列出 MCP / 技能 / 规则三种接入方式。
+- 实测：`initialize` → `tools/list` → `ruic_status` / `ruic_plan` 均正常返回（协议 `2024-11-05`）。
+
 ## 1.1.0 — 2026-10-30
 
 签名/只读安装的运行时覆盖（实测 DSH Desktop **0.2.1-rc.3**，`writable: false`、`state: "sealed"`）。

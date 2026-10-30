@@ -203,6 +203,25 @@ Windows 旧版 npm 布局要显式传 `--shim-dir <npm-prefix>`，`dsh.cmd` 和 
 - 关闭方式：`cordis.patch.yml` 里设 `runtimeOverride: false`。
 - 作用边界：这是让模型把 `AGENTS.md` 当**本次会话的硬约束**，不是改写宿主文件里的原文字节。宿主原文（“仅供参考”）仍在，只是运行时声明压过它的语气。
 
+## 在任何 AI 软件里用（MCP / 技能 / 规则）
+
+插件本身只能跑在 DSH 的 Cordis 运行时里；要让 Trae、Cursor、Claude 也用上，走 MCP：
+
+```bash
+# 任何支持 stdio MCP 的客户端都填这一行
+node D:\github专用仓库\RuiC-dsh-purge\lib\mcp.js
+```
+
+暴露三个工具：`ruic_status`（只读）、`ruic_plan`（只读）、`ruic_apply`（写文件，先快照后原子写入）。协议是纯 stdio JSON-RPC，无依赖、无 SDK。
+
+| 接入方式 | 适用软件 |
+|---|---|
+| MCP `lib/mcp.js` | Trae / DSH / Claude / Cursor 等支持 MCP 的客户端 |
+| `SKILL.md` | 支持技能目录的客户端 |
+| 「强制声明」段落 | 只支持规则文件的客户端 |
+
+`SKILL.md` 里写明了判断顺序和「只读宿主不要调 apply」的硬规则。
+
 ### 怎么自己复核
 
 不用信这张表，在**源码检出**里跑一条命令（发行包不含 `scripts/`）：

@@ -1,6 +1,6 @@
 {
   "name": "ruic-dsh-purge",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "RuiC DSH maintenance plugin: preflight, transactional patches, verified snapshots and conflict-aware rollback.",
   "type": "module",
   "main": "lib/index.js",
